@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CardList from './CardList';
 import SearchBox from './SearchBox';
 import { robots } from './robots';
+import './App.css';
 // Overarching concept of One way Data Flow -> Dirty vs Re-Rendered (App is parent which robots and SearchBox classes)
 
 /*Concept of STATE vs props in react:
@@ -44,7 +45,7 @@ class App extends Component{
         
         return (
             <div className='tc'>
-                <h1>RoboFriends</h1>
+                <h1 className='f1'>RoboFriends</h1>
                 <SearchBox searchChange = {this.onSearchChange}/>
                 <CardList robots={filteredRobots}/>
             </div>
@@ -55,5 +56,25 @@ class App extends Component{
 export default App;
 
 /*
+Explanation of code
+
+We have app component which has states of robots and searchfield
+since app owns these two states, any component that has state uses the class syntax which allows
+the usage of the constructor function to create this.state which is what changes in an app/describes an app.
+
+The virtual DOM is just a javascript object that collects states and react uses those states to render and pass them
+down as props to components in the return statement. The components that are just functions can just render.
+
+App will always look the same due to our program structuring of pure functions (one job/task with one input/output)
+State is managed in the render function. App is only thing that can change states.
+However, props can be passed down into the render function such as onSearchChange to the SearchBox.
+Then the SearchBox - every time there's an onSearchChange on the input, it lets the app know that a change was made
+and to run the onSearchChange function with the event and update the search field in the constructor from an
+empty string '' to whatever the given input was. 
+
+From here, we can communicate with the CardList and tell it to filter the this.state.robots to only 'includes'
+whatever is in the searchfield. Then instead of passing this.state.robots, we pass the filteredRobots.
+
+Note that robot never changes, but we created a new array called filteredRobots and we always pass that down.
 
 */
