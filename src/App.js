@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import CardList from './CardList';
 import SearchBox from './SearchBox';
-import { robots } from './robots';
+import Scroll from './Scroll';
 import './App.css';
 // Overarching concept of One way Data Flow -> Dirty vs Re-Rendered (App is parent which robots and SearchBox classes)
 
 /*Concept of STATE vs props in react:
 Description of your app -> STATE is just an object that describes your application
 STATE is able to change the value of searchbox (input) and change what robots are displayed
+ - Because App.js has states, its considered a smart component rather than a pure function such as SearchBox
+ - Piece of data that describe our app.
 Props = simply things that comes out of state
 Parent feed state to child component and once received, its a property that never changes.
 
@@ -16,7 +18,7 @@ when making your own method in a component, this arrow functions
 Example: onSearchChange(event) changes to onSearchChange= (event) => {}
 */
 
-// Syntax below for declaring a class
+// Syntax below for declaring a class - Class syntax is what makes a smart component
 class App extends Component{
     // How we add state - declare the state inside a constructor
     constructor() {
@@ -24,9 +26,17 @@ class App extends Component{
         super()
         // state is something that can change and effect our app which lives in the parent component
         this.state = {
-            robots: robots,
+            robots: [],
             searchfield: '',
         }
+    }
+
+    // this is part of react which is why we don't use arrow functions like onSearchChange
+    // Using .json to dynamically code instead of static
+    componentDidMount() {
+        fetch('https://jsonplaceholder.typicode.com/users')
+            .then(response => response.json()) // fetch the name and email first
+            .then(users => this.setState({ robots: users})); // this part is responsible to receiving the robots
     }
 
     // function we are creating - every time SearchBox input changes, it will trigger onSearchChange
@@ -42,14 +52,22 @@ class App extends Component{
             return robots.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
             // "this.state." is important because searchfield is a object which contains a state
         })
-        
-        return (
-            <div className='tc'>
+
+        // Remember 'this.state.' portion or else we get 'robots' is not defined no-undef error
+        // scroll component - can be used anywhere in our app due to power of react.
+        if (this.state.robots.length === 0) {
+            return <h1>Loading</h1>
+        } else {
+            return (
+                <div className='tc'>
                 <h1 className='f1'>RoboFriends</h1>
                 <SearchBox searchChange = {this.onSearchChange}/>
-                <CardList robots={filteredRobots}/>
+                <Scroll>
+                    <CardList robots={filteredRobots}/>
+                </Scroll>
             </div>
-        );
+            );
+        }
     }
 }
 
