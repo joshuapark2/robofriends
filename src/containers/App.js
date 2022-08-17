@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import CardList from './CardList';
-import SearchBox from './SearchBox';
-import Scroll from './Scroll';
+import CardList from '../components/CardList';
+import SearchBox from '../components/SearchBox';
+import Scroll from '../components/Scroll';
 import './App.css';
 // Overarching concept of One way Data Flow -> Dirty vs Re-Rendered (App is parent which robots and SearchBox classes)
 
@@ -47,18 +47,21 @@ class App extends Component{
 
     // Must nest a render() inside a return statement
     render() {
+        // usage of destructuring
+        const { robots, searchfield } = this.state;
+
         // with an event we always have .target.value
-        const filteredRobots = this.state.robots.filter(robots => {
-            return robots.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
+        const filteredRobots = robots.filter(robot => {
+            return robot.name.toLowerCase().includes(searchfield.toLowerCase());
             // "this.state." is important because searchfield is a object which contains a state
         })
 
         // Remember 'this.state.' portion or else we get 'robots' is not defined no-undef error
         // scroll component - can be used anywhere in our app due to power of react.
-        if (this.state.robots.length === 0) {
-            return <h1>Loading</h1>
-        } else {
-            return (
+
+        return !robots.length ?
+            <h1>Loading</h1> :
+            (
                 <div className='tc'>
                 <h1 className='f1'>RoboFriends</h1>
                 <SearchBox searchChange = {this.onSearchChange}/>
@@ -67,9 +70,9 @@ class App extends Component{
                 </Scroll>
             </div>
             );
-        }
     }
 }
+
 
 export default App;
 
