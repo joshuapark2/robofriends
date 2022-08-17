@@ -14,3 +14,9 @@ const Card = ({ name, email, id }) => {
 }
 
 export default Card;
+
+/*
+Core Concepts of components:
+Ordering of Atoms -> Molecules -> Organisms -> Templates -> Pages
+
+*/
