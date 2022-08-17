@@ -8,6 +8,7 @@ import Card from './Card';
 // ^^ Entire concept of props - main idea that they never change
 
 const CardList = ({ robots }) => {
+
     return (
         <div>
             {
